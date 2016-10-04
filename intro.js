@@ -797,7 +797,7 @@
    */
   function _showElement(targetElement) {
 
-    this._findElement.call(this, targetElement);
+    _findElement.call(this, targetElement);
 
     if (typeof (this._introChangeCallback) !== 'undefined') {
       this._introChangeCallback.call(this, targetElement.element);
