@@ -18,7 +18,7 @@
   }
 } (this, function (exports) {
   //Default config/variables
-  var VERSION = '2.3.0';
+  var VERSION = '2.3.1';
 
   /**
    * IntroJs main class
@@ -81,6 +81,45 @@
     };
   }
 
+  function _getFloatingElement() {
+    var floatingElementQuery = document.querySelector(".introjsFloatingElement");
+
+    if (floatingElementQuery == null) {
+      floatingElementQuery = document.createElement('div');
+      floatingElementQuery.className = 'introjsFloatingElement';
+
+      document.body.appendChild(floatingElementQuery);
+    }
+
+    return floatingElementQuery;
+  }
+
+  function _findElement(item) {
+
+    if (typeof (item.lazyElement) === 'undefined') {
+      return;
+    }
+
+    if (!item.lazyElement) {
+      item.element = this._getFloatingElement.call(this);
+      item.position = 'floating';
+
+      return;
+    }
+
+    if (typeof(item.lazyElement) === 'string') {
+      //grab the element with given selector from the page
+      item.element = document.querySelector(item.lazyElement);
+
+      return;
+    }
+
+    if (typeof(item.lazyElement) === 'function') {
+      item.element = item.lazyElement()
+    }
+
+  }
+
   /**
    * Initiate a new introduction/guide from an element in the page
    *
@@ -107,16 +146,7 @@
 
         //intro without element
         if (typeof(currentItem.element) === 'undefined' || currentItem.element == null) {
-          var floatingElementQuery = document.querySelector(".introjsFloatingElement");
-
-          if (floatingElementQuery == null) {
-            floatingElementQuery = document.createElement('div');
-            floatingElementQuery.className = 'introjsFloatingElement';
-
-            document.body.appendChild(floatingElementQuery);
-          }
-
-          currentItem.element  = floatingElementQuery;
+          currentItem.element  = this._getFloatingElement.call(self);
           currentItem.position = 'floating';
         }
 
@@ -766,6 +796,8 @@
    * @param {Object} targetElement
    */
   function _showElement(targetElement) {
+
+    this._findElement.call(this, targetElement);
 
     if (typeof (this._introChangeCallback) !== 'undefined') {
       this._introChangeCallback.call(this, targetElement.element);
