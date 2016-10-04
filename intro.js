@@ -146,7 +146,7 @@
 
         //intro without element
         if (typeof(currentItem.element) === 'undefined' || currentItem.element == null) {
-          currentItem.element  = this._getFloatingElement.call(self);
+          currentItem.element  = _getFloatingElement.call(self);
           currentItem.position = 'floating';
         }
 
